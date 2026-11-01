@@ -1,25 +1,9 @@
-// The frame around every page: the phase banner, the tabs along the top and the account corner. Wireframe only:
+// The frame around every page: the phase banner, grouped navigation and the account corner. Wireframe only:
 // every required element is here, unstyled and with placeholder text, for the real design to replace.
 import { html } from 'htm/preact';
 import { useEffect, useRef } from 'preact/hooks';
 import { discordProfile, signOut } from '../lib/supabase.js';
-
-// The tabs along the top. `who` is who will see each tab once roles exist; the wireframe shows them all.
-export const tabs = [
-  { href: '/', label: 'Home', who: 'everyone' },
-  { href: '/rules', label: 'Rules', who: 'everyone' },
-  { href: '/faq', label: 'FAQ', who: 'everyone' },
-  { href: '/teams', label: 'Teams', who: 'everyone' },
-  { href: '/players', label: 'Players', who: 'everyone' },
-  { href: '/scrims', label: 'Scrims', who: 'everyone' },
-  { href: '/schedule', label: 'Schedule', who: 'everyone' },
-  { href: '/bracket', label: 'Bracket', who: 'everyone' },
-  { href: '/champions', label: 'Champions', who: 'everyone' },
-  { href: '/me', label: 'Dashboard', who: 'signed in' },
-  { href: '/profile', label: 'Profile', who: 'signed in' },
-  { href: '/ref', label: 'Ref', who: 'refs' },
-  { href: '/admin', label: 'Admin', who: 'admin' },
-];
+import { Navigation } from './navigation.js';
 
 // "/teams/abc" still counts as being in Teams.
 const inSection = (href, path) => (href === '/' ? path === '/' : path === href || path.startsWith(`${href}/`));
@@ -94,18 +78,8 @@ export function Layout({ path, auth, children }) {
     <div class=${`site-chrome${landing ? ' site-chrome--overlay' : ''}`} ref=${chrome}>
     <p class="phase-banner">[Phase] · [Time until the next deadline]</p>
     <header class="site-header">
-      <a class="site-name" href="#/">[Tournament name]</a>
-      <nav aria-label="Main">
-        <ul class="tabs">
-          ${tabs.map(tab => html`
-            <li key=${tab.href}>
-              <a href=${`#${tab.href}`} aria-current=${current(tab.href, path)}>
-                ${tab.label}${tab.who !== 'everyone' && html` <span class="audience">(${tab.who})</span>`}
-              </a>
-            </li>
-          `)}
-        </ul>
-      </nav>
+      <a class="site-name" href="#/" aria-label="Home" aria-current=${current('/', path)}>[Tournament name]</a>
+      <${Navigation} path=${path} />
       <div class="account"><${Account} auth=${auth} /></div>
     </header>
     ${!landing && wireframeNote}
