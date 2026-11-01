@@ -1,0 +1,106 @@
+/* Wireframe styles: just enough to see and use every required element, in the browser's own light or dark colors.
+   The real design replaces this file. */
+:root { color-scheme: light dark; line-height: 1.5; } /* the font is set in fonts.css */
+body { margin: 0; }
+button, input, select, textarea { font: inherit; }
+
+.skip-link { position: absolute; left: -9999px; }
+.skip-link:focus { left: 8px; top: 8px; padding: 4px 8px; background: Canvas; }
+
+.phase-banner { margin: 0; padding: 6px 16px; border-bottom: 1px dashed; font-size: 0.875rem; }
+
+.site-header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 8px 16px; border-bottom: 1px solid; }
+.site-name { font-weight: 700; color: inherit; text-decoration: none; }
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.tabs a { display: inline-block; padding: 4px 10px; border: 1px solid; color: inherit; text-decoration: none; }
+.tabs a[aria-current="page"] { font-weight: 700; text-decoration: underline; }
+.audience { font-size: 0.75rem; opacity: 0.7; }
+.account { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-left: auto; }
+
+.wireframe-note { margin: 0; padding: 6px 16px; border-bottom: 1px dashed; font-size: 0.8125rem; opacity: 0.75; }
+.notice { margin: 8px 16px; padding: 8px 12px; border-left: 4px solid; }
+
+main { padding: 16px; }
+main > * { max-width: 900px; }
+
+/* The still stays pinned while ordinary page scrolling slowly opens up the view. */
+.landing-reveal {
+  --reveal-scale: 1.3;
+  --reveal-shift: 5%;
+  --reveal-shade: 0.3;
+  position: relative;
+  width: calc(100% + 32px);
+  max-width: none;
+  height: 210vh;
+  height: 210svh;
+  margin: -16px -16px 24px;
+}
+.landing-reveal__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0a1723;
+  color: #fff;
+}
+.landing-reveal__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  transform-origin: 50% 55%;
+  transform: translate3d(0, var(--reveal-shift), 0) scale(var(--reveal-scale));
+}
+.landing-reveal__shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #030b15;
+  opacity: var(--reveal-shade);
+}
+.landing-reveal__intro {
+  position: relative;
+  padding: clamp(24px, 5vw, 72px);
+  text-shadow: 0 2px 12px #000;
+}
+.landing-reveal__intro h1 { margin: 0; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.1; }
+.landing-reveal__hint { margin: 12px 0 0; }
+.landing-reveal__continue {
+  position: absolute;
+  left: clamp(24px, 5vw, 72px);
+  bottom: 32px;
+  max-width: calc(100% - 48px);
+  padding: 8px 12px;
+  border: 1px solid currentColor;
+  background: #0a1723d9;
+  color: inherit;
+  cursor: pointer;
+}
+.landing-reveal__continue:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+.landing-details { scroll-margin-top: 16px; }
+
+/* Let enlarged text and the Continue button take their own space on short screens. */
+@media (max-height: 500px) {
+  .landing-reveal__stage { height: auto; min-height: 100vh; min-height: 100svh; }
+  .landing-reveal__intro { padding: 24px; }
+  .landing-reveal__continue { position: relative; left: auto; bottom: auto; margin: 0 24px 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-reveal { height: auto; }
+  .landing-reveal__stage { position: relative; height: auto; min-height: clamp(320px, 65vh, 720px); min-height: clamp(320px, 65svh, 720px); }
+  .landing-reveal__image { transform: none; }
+  .landing-reveal__shade { opacity: 0.2; }
+  .landing-reveal__hint { display: none; }
+}
+.block { margin: 12px 0; padding: 8px 12px; border: 1px dashed; }
+.block-name { margin: 0 0 4px; font: 0.75rem monospace; opacity: 0.75; }
+.block-body > :first-child { margin-top: 0; }
+.block-body > :last-child { margin-bottom: 0; }
+
+footer { padding: 16px; border-top: 1px solid; font-size: 0.875rem; }
