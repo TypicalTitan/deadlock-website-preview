@@ -3,9 +3,10 @@
 :root { color-scheme: light dark; line-height: 1.5; } /* the font is set in fonts.css */
 body { margin: 0; }
 button, input, select, textarea { font: inherit; }
+.site-shell { position: relative; }
 
 .skip-link { position: absolute; left: -9999px; }
-.skip-link:focus { left: 8px; top: 8px; padding: 4px 8px; background: Canvas; }
+.skip-link:focus { z-index: 3; left: 8px; top: 8px; padding: 4px 8px; background: Canvas; color: CanvasText; }
 
 .phase-banner { margin: 0; padding: 6px 16px; border-bottom: 1px dashed; font-size: 0.875rem; }
 
@@ -16,6 +17,16 @@ button, input, select, textarea { font: inherit; }
 .tabs a[aria-current="page"] { font-weight: 700; text-decoration: underline; }
 .audience { font-size: 0.75rem; opacity: 0.7; }
 .account { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-left: auto; }
+
+/* Home's navigation sits directly over the hall; other routes keep the wireframe header. */
+.site-chrome--overlay { position: absolute; inset: 0 0 auto; z-index: 2; color: #fff; background: transparent; text-shadow: 0 1px 5px #000; }
+.site-chrome--overlay .phase-banner,
+.site-chrome--overlay .site-header { border: 0; background: transparent; }
+.site-chrome--overlay .tabs a { border-color: transparent; background: transparent; }
+.site-chrome--overlay .tabs a:hover { text-decoration: underline; }
+.site-chrome--overlay .account a { color: inherit; }
+.site-chrome--overlay .account button { border: 1px solid currentColor; background: transparent; color: inherit; }
+.site-chrome--overlay a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
 .wireframe-note { margin: 0; padding: 6px 16px; border-bottom: 1px dashed; font-size: 0.8125rem; opacity: 0.75; }
 .notice { margin: 8px 16px; padding: 8px 12px; border-left: 4px solid; }
@@ -66,6 +77,7 @@ main > * { max-width: 900px; }
 .landing-reveal__intro {
   position: relative;
   padding: clamp(24px, 5vw, 72px);
+  padding-top: calc(var(--site-chrome-height, 0px) + clamp(24px, 5vw, 72px));
   text-shadow: 0 2px 12px #000;
 }
 .landing-reveal__intro h1 { margin: 0; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.1; }
@@ -86,13 +98,14 @@ main > * { max-width: 900px; }
 
 /* Let enlarged text and the Continue button take their own space on short screens. */
 @media (max-height: 500px) {
+  .landing-reveal { min-height: calc(var(--site-chrome-height, 0px) + 150svh); }
   .landing-reveal__stage { height: auto; min-height: 100vh; min-height: 100svh; }
-  .landing-reveal__intro { padding: 24px; }
+  .landing-reveal__intro { padding: 24px; padding-top: calc(var(--site-chrome-height, 0px) + 24px); }
   .landing-reveal__continue { position: relative; left: auto; bottom: auto; margin: 0 24px 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .landing-reveal { height: auto; }
+  .landing-reveal { height: auto; min-height: 0; }
   .landing-reveal__stage { position: relative; height: auto; min-height: clamp(320px, 65vh, 720px); min-height: clamp(320px, 65svh, 720px); }
   .landing-reveal__image { transform: none; }
   .landing-reveal__shade { opacity: 0.2; }

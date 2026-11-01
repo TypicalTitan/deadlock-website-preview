@@ -58,13 +58,40 @@ function Account({ auth }) {
 
 export function Layout({ path, auth, children }) {
   const main = useRef(null);
+  const shell = useRef(null);
+  const chrome = useRef(null);
+  const landing = path === '/';
+
+  useEffect(() => {
+    if (!landing) return;
+    const element = shell.current;
+    const header = chrome.current;
+    // Reserve room for wrapped navigation while its background stays over the image.
+    const measure = () => element.style.setProperty('--site-chrome-height', `${header.getBoundingClientRect().height}px`);
+    const observer = new ResizeObserver(measure);
+    observer.observe(header);
+    measure();
+    return () => {
+      observer.disconnect();
+      element.style.removeProperty('--site-chrome-height');
+    };
+  }, [landing]);
+
   const skipToMain = event => {
     event.preventDefault(); // "#main" would otherwise be read as a route
     main.current?.focus();
   };
 
+  const wireframeNote = html`
+    <p class="wireframe-note">
+      Wireframe: text in [brackets] is a placeholder. P1 before signups open · P2 before scrim week · P3 before Round 1 · P4 nice to have.
+    </p>
+  `;
+
   return html`
+    <div class="site-shell" ref=${shell}>
     <a class="skip-link" href="#main" onClick=${skipToMain}>Skip to content</a>
+    <div class=${`site-chrome${landing ? ' site-chrome--overlay' : ''}`} ref=${chrome}>
     <p class="phase-banner">[Phase] · [Time until the next deadline]</p>
     <header class="site-header">
       <a class="site-name" href="#/">[Tournament name]</a>
@@ -81,11 +108,12 @@ export function Layout({ path, auth, children }) {
       </nav>
       <div class="account"><${Account} auth=${auth} /></div>
     </header>
-    <p class="wireframe-note">
-      Wireframe: text in [brackets] is a placeholder. P1 before signups open · P2 before scrim week · P3 before Round 1 · P4 nice to have.
-    </p>
+    ${!landing && wireframeNote}
     ${auth.error && html`<p class="notice" role="alert">[Sign-in error message] (${auth.error})</p>`}
+    </div>
     <main id="main" ref=${main} tabindex="-1">${children}</main>
+    ${landing && wireframeNote}
     <footer>[Footer: friends-only, run by fans, not affiliated with or endorsed by Valve]</footer>
+    </div>
   `;
 }
